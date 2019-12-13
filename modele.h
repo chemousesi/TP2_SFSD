@@ -11,12 +11,12 @@
 #include <stdio.h>
 
 // capacité maximale d'un bloc de données (en nombre d'enregistrements)
-#define MAXTAB 56
+#define MAXTAB 5
 
 
 // type d'un bloc de données (et donc des buffers aussi)
 typedef struct blc {
-	   long tab[MAXTAB];	// tableau d'enregistremnts (des entiers longs)
+	   int tab[MAXTAB];	// tableau d'enregistremnts (des entiers longs)
 	   char eff[MAXTAB];	// indicateurs d'effacement logique ('*' effacé / ' ' non effacé)
 	   int nb;		// nombre d'enregistrements dans le bloc
   	   char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
@@ -27,11 +27,11 @@ typedef struct blc {
 typedef struct entete {
 	   // nombre de blocs utilisé par les enreg (c'est aussi le num du dernier bloc)
 	   long nb_bloc;
-	   // nombre d'enregistrements dans le fichier	
+	   // nombre d'enregistrements dans le fichier
 	   long nb_ins;
 	   // nombre d'enregistrements supprimés (logiquement) dans le fichier
 	   long nb_sup;
-	   // pas nécessire, juste pour compléter la taille de l'entête jusqu'à 512 octes 
+	   // pas nécessire, juste pour compléter la taille de l'entête jusqu'à 512 octes
 	   char pad[488];
 	} t_entete;
 
@@ -46,7 +46,7 @@ void ouvrir( FILE **f, char *nom, char mode, t_entete *ent );
 void fermer( FILE *f, t_entete *ent);
 
 // lecture du bloc de données num i dans la variable buf
-void lireDir( FILE *f, long i, tbloc *buf ); 
+void lireDir( FILE *f, long i, tbloc *buf );
 
 // ecriture du contenu de la variable buf dans le bloc de données num i
 void ecrireDir( FILE *f, long i, tbloc *buf );

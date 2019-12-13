@@ -6,6 +6,8 @@
 
 #include "modele.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 FILE *f = NULL;
@@ -15,9 +17,9 @@ tbloc buf;
 void charg();		// Chargement initial du fichier
 void reorg();		// Réorganisation du fichier
 void info();		// Affichage de l'entête
-void rech();		// Recherche d'un enregistrement : 
-long dicho( long val, int *trouv, long *i, int *j ); // par dichotomie ou 
-long seq( long val, int *trouv, long *i, int *j );   // par recherche séquentielle 
+void rech();		// Recherche d'un enregistrement :
+long dicho( long val, int *trouv, long *i, int *j ); // par dichotomie ou
+long seq( long val, int *trouv, long *i, int *j );   // par recherche séquentielle
 void ins();		// Insertion par décalages d'un enregistrement
 void sup();		// Suppression logique d'un enregistrement
 void parcours();  	// Affichage d'une séquence de blocs contigus (entre a et b)
@@ -85,6 +87,7 @@ void charg()
    long i, k, n;
    int j;
 
+   srand(time(NULL));
    printf("Chargment initial du fichier\n");
    printf("Donnez le nombre d'enregistrement à insérer : ");
    scanf(" %ld", &n);
@@ -99,7 +102,7 @@ void charg()
    i = 1;
    for (k=0; k<n; k++) {
 	if ( j < MAXTAB*u ) {
-	   buf.tab[j] = k*10;
+	   buf.tab[j] = rand()%99 + 1 ; //generating a random number
 	   buf.eff[j] = ' ';
 	   j++;
 	}
@@ -107,7 +110,7 @@ void charg()
 	   buf.nb = j;
 	   ecrireDir(f, i, &buf);
 	   i++;
-	   buf.tab[0] = k*10;
+	   buf.tab[0] = rand()%99 + 1 ;
 	   buf.eff[0] = ' ';
 	   j = 1;
 	}
@@ -173,7 +176,7 @@ void reorg()
 	   }
 	i++;
    }
-   
+
    // dernière écriture (si buf2 n'est pas vide) ...
    if ( j2 > 0 ) {
 	buf2.nb = j2;
@@ -181,17 +184,17 @@ void reorg()
    }
 
    // m-a-j de l'entete de f2 ...
-   if ( j2 > 0 ) 
+   if ( j2 > 0 )
 	ent2.nb_bloc = i2;
-   else 
+   else
 	ent2.nb_bloc = i2 - 1;
-   ent2.nb_ins = ent.nb_ins - ent.nb_sup;	
+   ent2.nb_ins = ent.nb_ins - ent.nb_sup;
    ent2.nb_sup = 0;
 
    // réouverture du nouveau fichier avec les varaibles globales du prog: f, buf et ent
    fermer( f2, &ent2 );
    fermer( f , &ent );
-   ouvrir( &f, nom2, 'A', &ent ); 
+   ouvrir( &f, nom2, 'A', &ent );
 
 } // reorg
 
@@ -202,9 +205,9 @@ void info()
    printf("Informations sur le fichier \n");
    printf("\tNombre de blocs utilisés = %ld\n", ent.nb_bloc);
    printf("\tNombre d'enregistrements insérés = %ld\n", ent.nb_ins);
-   printf("\tNombre d'enregistrements supprimés = %ld\n", ent.nb_sup);    
+   printf("\tNombre d'enregistrements supprimés = %ld\n", ent.nb_sup);
    printf("\tFacteur de chargement moyen = %ld\n", \
-	(ent.nb_bloc == 0 ? 0 : (long)(((double)ent.nb_ins / (ent.nb_bloc*MAXTAB))*100)) ); 
+	(ent.nb_bloc == 0 ? 0 : (long)(((double)ent.nb_ins / (ent.nb_bloc*MAXTAB))*100)) );
 } // info
 
 
@@ -226,7 +229,7 @@ void rech()
 	cpt = seq( val, &trouv, &i, &j );
 
    printf("Résultats de la recherche:\n");
-   if (trouv && buf.eff[j] == ' ') 
+   if (trouv && buf.eff[j] == ' ')
 	printf("élément trouvé dans le bloc %ld à la position %d\n", i, j);
    else
 	printf("élément non trouvé et devrait être dans le bloc %ld à la position %d\n", i, j);
@@ -259,7 +262,7 @@ long dicho( long val, int *trouv, long *i, int *j )
 	   else {
 		stop = 1;	// recherche interne dans buf (bloc du milieu)
 	      	inf = 0;
-		sup = buf.nb-1; 
+		sup = buf.nb-1;
 		while ( inf <= sup && !*trouv ) {
 		   *j = (inf + sup) / 2;
 		   if ( val == buf.tab[*j] ) *trouv = 1;
@@ -305,7 +308,7 @@ long seq( long val, int *trouv, long *i, int *j )
 		else
 			*j = *j + 1;
 	} // while interne
-	if ( !stop && !*trouv ) 
+	if ( !stop && !*trouv )
 	   *i = *i + 1;
    } // while externe
 
@@ -338,12 +341,12 @@ void ins()
    printf("La valeur doit être insérer dans le bloc %ld à la position %d", i, j);
    printf(" ... "); fflush(stdout);
 
-   cptI = 0;	// compteur de lecture/ecriture dans la phase de décalages 
+   cptI = 0;	// compteur de lecture/ecriture dans la phase de décalages
 
-   empl_recup = 0; // indicateur de réutilisation d'un emplacement effacé logiquement 
+   empl_recup = 0; // indicateur de réutilisation d'un emplacement effacé logiquement
 		   // lors de l'insertion de la nouvelle valeur
 
-   if ( i > ent.nb_bloc ) { 
+   if ( i > ent.nb_bloc ) {
       // cas particulier d'une insertion en fin de fichier ...
       buf.tab[0] = val;
       buf.eff[0] = ' ';
@@ -361,7 +364,7 @@ void ins()
 	   if ( buf.eff[j] == '*' ) {
 		continu = 0;
 		buf.eff[j] = ' ';
-	   }	
+	   }
 	   else {
 	   	j++;
 		val = sauv;
@@ -377,7 +380,7 @@ void ins()
 	   }
 	   else {
 		ecrireDir( f, i, &buf ); cptI++;
-		i++;  j = 0; 
+		i++;  j = 0;
 		if ( i <= ent.nb_bloc ) {
 		   lireDir( f, i, &buf ); cptI++;
 		}
@@ -393,7 +396,7 @@ void ins()
 	   }
 	else {
 	   // cas où les décalages se sont arrêtés sur un enreg effacé logiquement
-	   empl_recup = 1; 
+	   empl_recup = 1;
 	   ent.nb_sup--;	// car on réutilisé l'emplacement effacé logiquement
 	   ecrireDir( f, i, &buf ); cptI++;
 	}
