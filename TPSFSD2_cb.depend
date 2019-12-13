@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1576274522 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\main.c
+	"modele.h"
+	<stdio.h>
+
+1576274522 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
+	<stdio.h>
+
+1576274522 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
+	"modele.h"
+	<stdio.h>
+
