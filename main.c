@@ -71,7 +71,6 @@ int main()
 	   case 6: reorg(); break;
 	}
    } while ( choix != 0);
-
    // Fermeture du fichier (sauvegarde de l'entete) ...
    fermer(f, &ent);
 
@@ -467,22 +466,74 @@ void parcours()
 	 else
 	    printf("*%ld* ", buf.tab[j]);
       printf("\n--------------------------------------------------\n");
+      printf("Etat du bloc tout le bloc est sup :%d", bloc_sup(buf));
+      printf("Etat du bloc tout le bloc est inf :%d", bloc_inf(buf));
+      printf("\n--------------------------------------------------\n");
    }
 
 } // parcours
 
-int bloc_sup(tbloc *buf)
+//int bloc_sup(tbloc buf)
+//{
+//    int res = 1;
+//    int stop = 0;
+//    int i = 0;
+//    while (!(stop) & i < MAXTAB)
+//    {
+//        if (buf.tab[i] <= pivot)
+//        {
+//            printf("\n %d ", buf.tab[i]);
+//            res = 0;
+//            stop = 1;
+//        }
+//        i++;
+//    }
+//    return res;
+//}
+
+
+int bloc_sup(tbloc buf1)   /** retourne vrai (1)  si tou le bloc est superieur au pivot 0 dans le cas contraire */
 {
     int res = 1;
+    int stop = 0;
+    long i = 0;
 
-    while (!(stop))
+    while (!(stop) & i < buf.nb)
     {
-        if (buf.tab[i] <= pivot)
+        if (buf1.tab[i] <= pivot)
+        {
+            printf("\n %d ", buf1.tab[i]);
+            res = 0;
+            stop = 1;
+        }
+        i++;
+    }
+    return res;
+}
+
+
+//-----------------------------------------------------------------------------
+int bloc_inf(tbloc buf1) /** retourne vrai (1)  si tou le bloc est inferieur au pivot, 0 dans ele cas contraire */
+{
+    int res = 1;
+    int stop = 0;
+    long i = 0;
+
+    while (!(stop) & i < buf.nb)
+    {
+        if (buf1.tab[i] > pivot)
         {
             res = 0;
             stop = 1;
         }
+        i++;
     }
+    return res;
 }
 
+//---------------------------------
 
+int chrg_exple(tbloc buf)
+{
+
+}
