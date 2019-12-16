@@ -13,7 +13,9 @@
 FILE *f = NULL;
 t_entete ent;
 tbloc buf;
-int pivot = 15;
+tbloc bufa, bufb;
+int pivot = 45
+;
 
 void charg();		// Chargement initial du fichier
 void reorg();		// Réorganisation du fichier
@@ -57,6 +59,7 @@ int main()
 	printf("4) Supprimer un enregistrement dans le fichier\n");
 	printf("5) Affichage de bloc(s)\n");
 	printf("6) Réorganisation du fichier\n");
+	printf("7) organiser selon pivot un bloc");
 	printf("0) Quitter le programme\n");
 	printf("\tchoix : ");
 	scanf(" %d", &choix);
@@ -467,7 +470,9 @@ void parcours()
 	    printf("*%ld* ", buf.tab[j]);
       printf("\n--------------------------------------------------\n");
       printf("Etat du bloc tout le bloc est sup :%d", bloc_sup(buf));
-      printf("Etat du bloc tout le bloc est inf :%d", bloc_inf(buf));
+      printf("\nEtat du bloc tout le bloc est inf :%d \n", bloc_inf(buf));
+      orga_selon_pivot();
+
       printf("\n--------------------------------------------------\n");
    }
 
@@ -533,7 +538,87 @@ int bloc_inf(tbloc buf1) /** retourne vrai (1)  si tou le bloc est inferieur au 
 
 //---------------------------------
 
-int chrg_exple(tbloc buf)
+int chrg_exple(tbloc buf) /** je la ferai ultérieurement pour faire un exemple de chargement comme l'exemple du cours */
 {
 
 }
+
+
+
+
+
+
+void organiseA()
+
+    /** cette fonction fait la reorganisation du
+    buffer les valeurs inf au puvot se mettent
+    au debut du bloc sur le buf*/
+{
+    printf("\n je suis dans organise a %d \n", bufa.nb);
+    int temp, indice = 0;
+    for(int i = 0;i < bufa.nb;i++)
+    {
+        if (bufa.tab[i] <= pivot)
+        {
+            printf("here");
+            temp = bufa.tab[indice];
+            bufa.tab[indice] = bufa.tab[i];
+            bufa.tab[i] = temp;
+            indice++;
+        }
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void orga_selon_pivot()
+{
+    // declarations
+    long a = 1; // ceci fera la borne inf bloc inferieur
+    //long b = entete.nb_bloc
+
+
+
+
+        lireDir(f, a, &bufa);
+        organiseA();
+        // pour tester organiser pour un seul bloc
+        for( int j=0; j<bufa.nb; j++)
+            {
+                if ( bufa.eff[j] == ' ' )
+                printf("%ld ", bufa.tab[j]);
+                else
+                printf("*%ld* ", bufa.tab[j]);
+            }
+
+	    //ecrireDir(f, a, &bufa);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1576491912 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\main.c
+1576496231 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\main.c
 	"modele.h"
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 
-1576279905 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
+1576494084 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
 	<stdio.h>
 
 1576274522 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
