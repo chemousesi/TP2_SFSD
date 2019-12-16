@@ -478,24 +478,6 @@ void parcours()
 
 } // parcours
 
-//int bloc_sup(tbloc buf)
-//{
-//    int res = 1;
-//    int stop = 0;
-//    int i = 0;
-//    while (!(stop) & i < MAXTAB)
-//    {
-//        if (buf.tab[i] <= pivot)
-//        {
-//            printf("\n %d ", buf.tab[i]);
-//            res = 0;
-//            stop = 1;
-//        }
-//        i++;
-//    }
-//    return res;
-//}
-
 
 int bloc_sup(tbloc buf1)   /** retourne vrai (1)  si tou le bloc est superieur au pivot 0 dans le cas contraire */
 {
@@ -515,7 +497,6 @@ int bloc_sup(tbloc buf1)   /** retourne vrai (1)  si tou le bloc est superieur a
     }
     return res;
 }
-
 
 //-----------------------------------------------------------------------------
 int bloc_inf(tbloc buf1) /** retourne vrai (1)  si tou le bloc est inferieur au pivot, 0 dans ele cas contraire */
@@ -544,45 +525,70 @@ int chrg_exple(tbloc buf) /** je la ferai ultérieurement pour faire un exemple 
 }
 
 
+//void organiseA()
+//
+//    /** cette fonction fait la reorganisation du
+//    buffer les valeurs inf au puvot se mettent
+//    au debut du bloc sur le buf*/
+//{
+//    printf("\n je suis dans organise a %d \n", bufa.nb);
+//    int temp, indice = 0;
+//    for(int i = 0;i < bufa.nb;i++)
+//    {
+//        if (bufa.tab[i] <= pivot)
+//        {
+//            printf("here");
+//            temp = bufa.tab[indice];
+//            bufa.tab[indice] = bufa.tab[i];
+//            bufa.tab[i] = temp;
+//            indice++;
+//        }
+//
+//    }
+//}
 
 
-
-
-void organiseA()
+void organiseA(tbloc *buft)
 
     /** cette fonction fait la reorganisation du
     buffer les valeurs inf au puvot se mettent
     au debut du bloc sur le buf*/
 {
-    printf("\n je suis dans organise a %d \n", bufa.nb);
+    printf("\n je suis dans organise a %d \n", (*buft).nb);
     int temp, indice = 0;
-    for(int i = 0;i < bufa.nb;i++)
+    for(int i = 0;i < (*buft).nb;i++)
     {
-        if (bufa.tab[i] <= pivot)
+        if ((*buft).tab[i] <= pivot)
         {
-            printf("here");
-            temp = bufa.tab[indice];
-            bufa.tab[indice] = bufa.tab[i];
-            bufa.tab[i] = temp;
+
+            temp = (*buft).tab[indice];
+            (*buft).tab[indice] = (*buft).tab[i];
+            (*buft).tab[i] = temp;
             indice++;
         }
 
     }
 }
+void organiseB()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /** cette fonction fait la reorganisation du
+    buffer les valeurs inf au puvot se mettent
+    au debut du bloc sur le buf*/
+{
+    printf("\n je suis dans organise a %d \n", bufb.nb);
+    int temp, indice = 0;
+    for(int i = 0;i < bufb.nb;i++)
+    {
+        if (bufb.tab[i] <= pivot)
+        {
+            printf("here");
+            temp = bufb.tab[indice];
+            bufb.tab[indice] = bufb.tab[i];
+            bufb.tab[i] = temp;
+            indice++;
+        }
+    }
+}
 
 
 void orga_selon_pivot()
@@ -595,7 +601,8 @@ void orga_selon_pivot()
 
 
         lireDir(f, a, &bufa);
-        organiseA();
+        organiseA(&bufa);
+
         // pour tester organiser pour un seul bloc
         for( int j=0; j<bufa.nb; j++)
             {
@@ -604,8 +611,6 @@ void orga_selon_pivot()
                 else
                 printf("*%ld* ", bufa.tab[j]);
             }
-
-	    //ecrireDir(f, a, &bufa);
 
 }
 
