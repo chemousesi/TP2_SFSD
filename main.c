@@ -13,6 +13,7 @@
 FILE *f = NULL;
 t_entete ent;
 tbloc buf;
+int pivot = 15;
 
 void charg();		// Chargement initial du fichier
 void reorg();		// Réorganisation du fichier
@@ -470,6 +471,18 @@ void parcours()
 
 } // parcours
 
+int bloc_sup(tbloc *buf)
+{
+    int res = 1;
 
+    while (!(stop))
+    {
+        if (buf.tab[i] <= pivot)
+        {
+            res = 0;
+            stop = 1;
+        }
+    }
+}
 
 

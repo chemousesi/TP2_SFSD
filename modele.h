@@ -16,10 +16,10 @@
 
 // type d'un bloc de données (et donc des buffers aussi)
 typedef struct blc {
-	   int tab[MAXTAB];	// tableau d'enregistremnts (des entiers longs)
+	   long tab[MAXTAB];	// tableau d'enregistremnts (des entiers longs)
 	   char eff[MAXTAB];	// indicateurs d'effacement logique ('*' effacé / ' ' non effacé)
 	   int nb;		// nombre d'enregistrements dans le bloc
-  	   char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
+  	   //char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
         } tbloc;
 
 
@@ -32,7 +32,7 @@ typedef struct entete {
 	   // nombre d'enregistrements supprimés (logiquement) dans le fichier
 	   long nb_sup;
 	   // pas nécessire, juste pour compléter la taille de l'entête jusqu'à 512 octes
-	   char pad[488];
+	   //char pad[488];
 	} t_entete;
 
 

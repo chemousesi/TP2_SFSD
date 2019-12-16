@@ -31,16 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="fonctions.c">
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="fonctions.h">
-			<Option compile="1" />
-			<Option link="1" />
-		</Unit>
-		<Unit filename="main1.c">
+		<Unit filename="modele.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="modele.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
