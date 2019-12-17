@@ -26,6 +26,7 @@ long seq( long val, int *trouv, long *i, int *j );   // par recherche séquentie
 void ins();		// Insertion par décalages d'un enregistrement
 void sup();		// Suppression logique d'un enregistrement
 void parcours();  	// Affichage d'une séquence de blocs contigus (entre a et b)
+void orga_selon_pivot(); // organise le fichier selon un pivot donner au debut les valeurs inf pui à la fin les valeurs inf
 
 
 
@@ -59,8 +60,9 @@ int main()
 	printf("4) Supprimer un enregistrement dans le fichier\n");
 	printf("5) Affichage de bloc(s)\n");
 	printf("6) Réorganisation du fichier\n");
-	printf("7) organiser selon pivot un bloc");
+	printf("7) organiser selon pivot qui est %d \n", pivot);
 	printf("0) Quitter le programme\n");
+
 	printf("\tchoix : ");
 	scanf(" %d", &choix);
 	printf("\n---------------------------\n\n");
@@ -72,6 +74,7 @@ int main()
 	   case 4: sup(); break;
 	   case 5: parcours(); break;
 	   case 6: reorg(); break;
+	   case 7:  orga_selon_pivot();break;
 	}
    } while ( choix != 0);
    // Fermeture du fichier (sauvegarde de l'entete) ...
@@ -455,41 +458,38 @@ void parcours()
    int j;
 
    printf("Affichage d'une séquence de bloc(s). ayant des adresses dans [a , b] \n");
-   printf("le fichier commence dans le bloc num 1 et se termine dans le bloc num %ld\n", ent.nb_bloc);
+   printf("le fichiorga_selon_pivoter commence dans le bloc num 1 et se termine dans le bloc num %ld\n", ent.nb_bloc);
    printf("donnez a : ");
    scanf(" %ld", &a);
    printf("donnez b : ");
    scanf(" %ld", &b);
    for (i = a; i <= b; i++) {
       lireDir(f, i, &buf);
-      printf("[Bloc Num:%3ld \tNB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
+      printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
       for( j=0; j<buf.nb; j++)
 	 if ( buf.eff[j] == ' ' )
 	    printf("%ld ", buf.tab[j]);
 	 else
 	    printf("*%ld* ", buf.tab[j]);
       printf("\n--------------------------------------------------\n");
-      printf("Etat du bloc tout le bloc est sup :%d", bloc_sup(buf));
-      printf("\nEtat du bloc tout le bloc est inf :%d \n", bloc_inf(buf));
-      orga_selon_pivot();
 
-      printf("\n--------------------------------------------------\n");
+
+
    }
 
 } // parcours
 
 
-int bloc_sup(tbloc buf1)   /** retourne vrai (1)  si tou le bloc est superieur au pivot 0 dans le cas contraire */
+int bloc_sup(tbloc buf2)   /** retourne vrai (1)  si tou le bloc est superieur au pivot 0 dans le cas contraire */
 {
     int res = 1;
     int stop = 0;
     long i = 0;
 
-    while (!(stop) & i < buf.nb)
+    while (!(stop) & i < buf2.nb)
     {
-        if (buf1.tab[i] <= pivot)
+        if (buf2.tab[i] <= pivot)
         {
-            printf("\n %d ", buf1.tab[i]);
             res = 0;
             stop = 1;
         }
@@ -505,7 +505,7 @@ int bloc_inf(tbloc buf1) /** retourne vrai (1)  si tou le bloc est inferieur au 
     int stop = 0;
     long i = 0;
 
-    while (!(stop) & i < buf.nb)
+    while (!(stop) & i < buf1.nb)
     {
         if (buf1.tab[i] > pivot)
         {
@@ -525,36 +525,11 @@ int chrg_exple(tbloc buf) /** je la ferai ultérieurement pour faire un exemple 
 }
 
 
-//void organiseA()
-//
-//    /** cette fonction fait la reorganisation du
-//    buffer les valeurs inf au puvot se mettent
-//    au debut du bloc sur le buf*/
-//{
-//    printf("\n je suis dans organise a %d \n", bufa.nb);
-//    int temp, indice = 0;
-//    for(int i = 0;i < bufa.nb;i++)
-//    {
-//        if (bufa.tab[i] <= pivot)
-//        {
-//            printf("here");
-//            temp = bufa.tab[indice];
-//            bufa.tab[indice] = bufa.tab[i];
-//            bufa.tab[i] = temp;
-//            indice++;
-//        }
-//
-//    }
-//}
-
-
 void organiseA(tbloc *buft)
-
     /** cette fonction fait la reorganisation du
     buffer les valeurs inf au puvot se mettent
     au debut du bloc sur le buf*/
 {
-    printf("\n je suis dans organise a %d \n", (*buft).nb);
     int temp, indice = 0;
     for(int i = 0;i < (*buft).nb;i++)
     {
@@ -566,27 +541,6 @@ void organiseA(tbloc *buft)
             (*buft).tab[i] = temp;
             indice++;
         }
-
-    }
-}
-void organiseB()
-
-    /** cette fonction fait la reorganisation du
-    buffer les valeurs inf au puvot se mettent
-    au debut du bloc sur le buf*/
-{
-    printf("\n je suis dans organise a %d \n", bufb.nb);
-    int temp, indice = 0;
-    for(int i = 0;i < bufb.nb;i++)
-    {
-        if (bufb.tab[i] <= pivot)
-        {
-            printf("here");
-            temp = bufb.tab[indice];
-            bufb.tab[indice] = bufb.tab[i];
-            bufb.tab[i] = temp;
-            indice++;
-        }
     }
 }
 
@@ -595,22 +549,67 @@ void orga_selon_pivot()
 {
     // declarations
     long a = 1; // ceci fera la borne inf bloc inferieur
-    //long b = entete.nb_bloc
-
-
-
-
+    long b = ent.nb_bloc;// ceci fera la borne sup bloc inferieur
+    int stop = 0;
+    int tempo;
+    while (!stop)
+    {
         lireDir(f, a, &bufa);
         organiseA(&bufa);
+        lireDir(f, b, &bufb);
+        organiseA(&bufb);
+        printf("a is %d b is %d\n", a, b);
+        printf(" inf is %d and sup is %d\n", bloc_inf(bufa), bloc_sup(bufb));
+        while(!(bloc_inf(bufa)) && !(bloc_sup(bufb)))
+        {
+            printf("here");
+            int i = 0;
+            while (bufa.tab[i] <= pivot)
+            {
+                i++;
+            }
+            tempo = bufa.tab[i];
+            bufa.tab[i] = bufb.tab[0];
+            bufb.tab[0] = tempo;
+            organiseA(&bufb);
+
+        }
+
+
+        if (bloc_inf(bufa))
+        {
+            ecrireDir(f, a, &bufa);
+            ecrireDir(f, b, &bufb);
+            a++;
+        }else if (bloc_sup(bufb))
+            {
+            ecrireDir(f, a, &bufa);
+            ecrireDir(f, b, &bufb);
+            b--;
+            }
+
+
+        if (a==b)
+        {
+            lireDir(f, a, &bufa);
+            organiseA(&bufa);
+            ecrireDir(f, a, &bufa);
+            stop = 1;
+        }
+
+    }
+
+
+
 
         // pour tester organiser pour un seul bloc
-        for( int j=0; j<bufa.nb; j++)
-            {
-                if ( bufa.eff[j] == ' ' )
-                printf("%ld ", bufa.tab[j]);
-                else
-                printf("*%ld* ", bufa.tab[j]);
-            }
+//        for( int j=0; j<bufa.nb; j++)
+//            {
+//                if ( bufa.eff[j] == ' ' )
+//                printf("%ld ", bufa.tab[j]);
+//                else
+//                printf("*%ld* ", bufa.tab[j]);
+//            }
 
 }
 
