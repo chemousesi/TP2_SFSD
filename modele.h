@@ -12,11 +12,10 @@
 #ifndef MODELE_H
 #define MODELE_H
 
-
-
-
 // capacité maximale d'un bloc de données (en nombre d'enregistrements)
 #define MAXTAB 5
+
+/** déclaration du pivot comme variable globale */
 int pivot;
 
 // type d'un bloc de données (et donc des buffers aussi)
@@ -24,7 +23,7 @@ typedef struct blc {
 	   long tab[MAXTAB];	// tableau d'enregistremnts (des entiers longs)
 	   char eff[MAXTAB];	// indicateurs d'effacement logique ('*' effacé / ' ' non effacé)
 	   int nb;		// nombre d'enregistrements dans le bloc
-  	   //char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
+  	   char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
         } tbloc;
 
 

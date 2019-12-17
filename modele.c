@@ -3,9 +3,11 @@
  **************************************************************************/
 #include <stdio.h>
 #include <time.h>
+#include "conio.h"
 #include "modele.h"
 
 
+/** declaration du fichier*/
 FILE *f = NULL;
 
 tbloc buf, bufa, bufb;
@@ -67,15 +69,15 @@ void charg()
 
    srand(time(NULL));
    printf("Chargment initial du fichier\n");
-   printf("Donnez le nombre d'enregistrement à insérer : ");
+   printf("Donnez le nombre d'enregistrement %c ins%crer : ",133 , 130);
    scanf(" %ld", &n);
-   printf("Donnez le taux de chargement souhaité (entre 0 et 1) : ");
+   printf("Donnez le taux de chargement souhait%c (entre 0 et 1) : ", 130);
    scanf(" %lf", &u);
    if ( u < 1/MAXTAB ) u = 1/MAXTAB; // pour avoir au moins un enregistrement par bloc
    if ( u > 1 ) u = 1.0;	     // maximum = 100%
 
-   printf("Remplissage des blocs avec %d enreg (sauf éventuellement le dernier)\n",\
-	   (int)(MAXTAB*u));
+   printf("Remplissage des blocs avec %d enreg (sauf %cventuellement le dernier)\n" ,\
+	   (int)(MAXTAB*u), 130);
    j = 0;
    i = 1;
    for (k=0; k<n; k++) {
@@ -107,26 +109,29 @@ void charg()
 void info()
 {
    printf("Informations sur le fichier \n");
-   printf("\tNombre de blocs utilisés = %ld\n", ent.nb_bloc);
-   printf("\tNombre d'enregistrements insérés = %ld\n", ent.nb_ins);
-   printf("\tNombre d'enregistrements supprimés = %ld\n", ent.nb_sup);
+   printf("\tNombre de blocs utilis%cs = %ld\n",130,  ent.nb_bloc);
+   printf("\tNombre d'enregistrements ins%cr%cs = %ld\n",130, 130, ent.nb_ins);
+   printf("\tNombre d'enregistrements supprim%cs = %ld\n",130,  ent.nb_sup);
    printf("\tFacteur de chargement moyen = %ld\n", \
 	(ent.nb_bloc == 0 ? 0 : (long)(((double)ent.nb_ins / (ent.nb_bloc*MAXTAB))*100)) );
 } // info
 
-
 // Affichage d'une séquence de blocs contigus (entre a et b)
+
 void parcours()
 {
    long i, a, b;
    int j;
 
-   printf("Affichage d'une séquence de bloc(s). ayant des adresses dans [a , b] \n");
-   printf("le fichiorga_selon_pivoter commence dans le bloc num 1 et se termine dans le bloc num %ld\n", ent.nb_bloc);
+   printf("Affichage d'une s%cquence de bloc(s). ayant des adresses dans [a , b] \n", 130);
+   printf("le fichier commence dans le bloc num 1 et se termine dans le bloc num %ld\n", ent.nb_bloc);
    printf("donnez a : ");
-   scanf(" %ld", &a);
+   textcolor(GREEN);scanf(" %ld", &a);textcolor(WHITE);
    printf("donnez b : ");
-   scanf(" %ld", &b);
+   textcolor(GREEN);scanf(" %ld", &b);textcolor(WHITE);
+
+
+    printf("\n");
    for (i = a; i <= b; i++) {
       lireDir(f, i, &buf);
       printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
@@ -135,9 +140,10 @@ void parcours()
 	    printf("%ld ", buf.tab[j]);
 	 else
 	    printf("*%ld* ", buf.tab[j]);
-      printf("\n--------------------------------------------------\n");
-
+      printf("      ");
+     printf("\n-------------------\n");
    }
+
 
 } // parcours
 
@@ -213,22 +219,28 @@ void orga_selon_pivot()
 {
     // declarations
     printf("Donner votre pivot :");
+    textcolor(RED);
     scanf("%d", &pivot);
+    textcolor(WHITE);
     long a = 1; // ceci fera la borne inf bloc inferieur
     long b = ent.nb_bloc;// ceci fera la borne sup bloc inferieur
     int stop = 0;
     int tempo;
+
+
     while (!stop)
     {
         lireDir(f, a, &bufa);
         organiseA(&bufa);
         lireDir(f, b, &bufb);
         organiseA(&bufb);
-        printf("a is %d b is %d\n", a, b);
-        printf(" inf is %d and sup is %d\n", bloc_inf(bufa), bloc_sup(bufb));
+
         while(!(bloc_inf(bufa)) && !(bloc_sup(bufb)))
+            /** dans cette boucle on teste
+            si le bufa a(inf) est en entier inférieur au pivot pour l'incrémenter
+            ou si le buf b (sup) est en entier supérieur au pivot pour décrémenter
+             */
         {
-            printf("here");
             int i = 0;
             while (bufa.tab[i] <= pivot)
             {
@@ -240,20 +252,16 @@ void orga_selon_pivot()
             organiseA(&bufb);
 
         }
-
-
+            ecrireDir(f, a, &bufa);
         if (bloc_inf(bufa))
         {
             ecrireDir(f, a, &bufa);
-            ecrireDir(f, b, &bufb);
             a++;
         }else if (bloc_sup(bufb))
             {
-            ecrireDir(f, a, &bufa);
             ecrireDir(f, b, &bufb);
             b--;
             }
-
 
         if (a==b)
         {
@@ -264,7 +272,9 @@ void orga_selon_pivot()
         }
 
     }
-
+    textcolor(GREEN);
+    printf("Le fichier a %ct%c r%corganis%c selon le pivot %d avec succ%cs.", 130, 130, 130, 130, pivot, 138);
+    textcolor(WHITE);
 }
 
 
@@ -276,12 +286,14 @@ void debut()
 {
 
    char nom[20], mode[20];
-
-   printf("Opérations d'accès sur un Fichier de type TÔF\n");
-   printf("Capacité maximale des blocs = %d enregistrements\t", MAXTAB);
+   textcolor(GREEN);
+   printf("\n***************************************************\n");
+   printf("Op%crations d'acc%cs sur un Fichier de type T/oF\n", 130, 138);
+   printf("Capacit%c maximale des blocs = %d enregistrements\t\n\n",130,  MAXTAB);
+    textcolor(WHITE);
    printf("Taille d'un bloc = %ld \tTaille entete = %ld\n\n", sizeof(tbloc), sizeof(t_entete) );
 
-    printf("Donnez le nom du fichier : ");
+    printf("\nDonnez le nom du fichier : ");
    scanf(" %s", nom);
    printf("Ancien ou Nouveau ? (a/n) : ");
    scanf(" %s", mode);

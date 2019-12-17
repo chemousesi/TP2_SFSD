@@ -4,20 +4,22 @@
 
 #include "modele.h"
 #include <stdlib.h>
-
+#include "conio.c"
 
 int main()
 {
     int choix , i;
    // Ouverture du fichier ...
-   debut();
+    debut();
    // Menu principal ...
    do {
+        textcolor(CYAN);
       	printf("\n--------- M E N U ---------\n");
-	printf("1) Afficher l'entete du fichier\n");
-	printf("2) Affichage de bloc(s)\n");
-	printf("3) organiser selon pivot qui est %d \n", pivot);
-	printf("0) Quitter le programme\n");
+
+	 textcolor(BLUE);printf("  1)");textcolor(WHITE); printf("Afficher l'entete du fichier\n");
+	 textcolor(BLUE);printf("  2)");textcolor(WHITE);printf("Affichage de bloc(s)\n");
+	 textcolor(BLUE);printf("  3)");textcolor(WHITE);printf("Organiser selon un pivot\n");
+	 textcolor(BLUE);printf("  0)");textcolor(WHITE); printf("Quitter le programme\n");
 
 	printf("\tchoix : ");
 	scanf(" %d", &choix);
