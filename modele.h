@@ -1,21 +1,23 @@
 /************************************************************************
- * Interface du modèle simplifé d'un fichier TOF / SFSD 2019 / Hidouci 	*
+ * Interface du modèle simplifé d'un fichier T/OF / SFSD 2019 / chemsou 	*
  * les types des blocs de données et de l'entête 			*
  * les fonctions du modèle : ouvrir, fermer, lireDir, ecrireDir ...	*
  ************************************************************************/
 
 
+
+
+
+#include <stdio.h>
 #ifndef MODELE_H
 #define MODELE_H
 
-#include <stdio.h>
+
+
 
 // capacité maximale d'un bloc de données (en nombre d'enregistrements)
 #define MAXTAB 5
 int pivot;
-FILE *f = NULL;
-
-
 
 // type d'un bloc de données (et donc des buffers aussi)
 typedef struct blc {
@@ -24,6 +26,7 @@ typedef struct blc {
 	   int nb;		// nombre d'enregistrements dans le bloc
   	   //char pad[4];		// pas nécessaire, juste pour avoir une taille de bloc de 512 octets
         } tbloc;
+
 
 
 // type du bloc d'entête (les caractéristiques du fichier)
@@ -40,7 +43,6 @@ typedef struct entete {
 
 
 // declaration de l'entete
-t_entete ent;
 
 
 // ouvrir un fichier en mode 'N' ou 'A'
@@ -61,9 +63,7 @@ void charg();		// Chargement initial du fichier
 void info();		// Affichage de l'entête
 void parcours();  	// Affichage d'une séquence de blocs contigus (entre a et b)
 void orga_selon_pivot(); // organise le fichier selon un pivot donner au debut les valeurs inf pui à la fin les valeurs inf
-
-
-
-
+void debut();// debut du programme
+void fin();
 #endif
 

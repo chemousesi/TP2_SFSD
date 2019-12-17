@@ -1,15 +1,15 @@
 # depslib dependency file v1.0
-1576551243 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\main.c
+1576601923 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\main.c
 	"modele.h"
-	<stdio.h>
 	<stdlib.h>
-	<time.h>
-	<conio.h>
 
-1576551243 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
+1576601923 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
 	<stdio.h>
 
-1576551174 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
+1576598742 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
 	"modele.h"
-	<stdio.h>
+	<time.h>
+
+1576598940 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
+	<time.h>
 

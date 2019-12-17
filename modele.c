@@ -1,21 +1,15 @@
 /**************************************************************************
- * Implémentation du modèle simplfié de fichier TOF / SFSD 2019 / Hidouci *
+ * Implémentation du modèle simplfié de fichier TOF / SFSD 2019 / chemsou&oussama *
  **************************************************************************/
-
-
-
-
-#include "modele.h"
 #include <stdio.h>
+#include <time.h>
+#include "modele.h"
 
 
+FILE *f = NULL;
 
-
-tbloc buf;
-tbloc bufa, bufb;
-
-
-
+tbloc buf, bufa, bufb;
+t_entete ent;
 
 
 
@@ -274,9 +268,36 @@ void orga_selon_pivot()
 }
 
 
+void debut()
+
+/** prépare le debut du programme nom est ouvre le fichier
+           crée le fichier quand il est nouveau */
+
+{
+
+   char nom[20], mode[20];
+
+   printf("Opérations d'accès sur un Fichier de type TÔF\n");
+   printf("Capacité maximale des blocs = %d enregistrements\t", MAXTAB);
+   printf("Taille d'un bloc = %ld \tTaille entete = %ld\n\n", sizeof(tbloc), sizeof(t_entete) );
+
+    printf("Donnez le nom du fichier : ");
+   scanf(" %s", nom);
+   printf("Ancien ou Nouveau ? (a/n) : ");
+   scanf(" %s", mode);
+   if ( mode[0] == 'a' || mode[0] == 'A' )
+	ouvrir( &f, nom , 'A', &ent );
+   else {
+	ouvrir( &f, nom , 'N', &ent );
+	charg();
+   }
+
+}
 
 
-
-
+void fin() // ferme le fichier
+{
+    fermer(f, &ent);
+}
 
 

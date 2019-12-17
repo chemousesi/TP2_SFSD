@@ -2,40 +2,15 @@
  * Exemple de programme C manipulant un fichier T/OF / SFSD 2019 / benaziza&benakmoum *
  **************************************************************************/
 
-
-
 #include "modele.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <conio.h>
-
-
-
-
 
 
 int main()
 {
-   int choix , i;
-   char nom[20], mode[20];
-
-   printf("Opérations d'accès sur un Fichier de type TÔF\n");
-   printf("Capacité maximale des blocs = %d enregistrements\t", MAXTAB);
-   printf("Taille d'un bloc = %ld \tTaille entete = %ld\n\n", sizeof(tbloc), sizeof(t_entete) );
-
+    int choix , i;
    // Ouverture du fichier ...
-   printf("Donnez le nom du fichier : ");
-   scanf(" %s", nom);
-   printf("Ancien ou Nouveau ? (a/n) : ");
-   scanf(" %s", mode);
-   if ( mode[0] == 'a' || mode[0] == 'A' )
-	ouvrir( &f, nom , 'A', &ent );
-   else {
-	ouvrir( &f, nom , 'N', &ent );
-	charg();
-   }
-
+   debut();
    // Menu principal ...
    do {
       	printf("\n--------- M E N U ---------\n");
@@ -55,7 +30,7 @@ int main()
 	}
    } while ( choix != 0);
    // Fermeture du fichier (sauvegarde de l'entete) ...
-   fermer(f, &ent);
+   fin();
 
    return 0;
 
