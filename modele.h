@@ -12,6 +12,9 @@
 
 // capacité maximale d'un bloc de données (en nombre d'enregistrements)
 #define MAXTAB 5
+int pivot;
+FILE *f = NULL;
+
 
 
 // type d'un bloc de données (et donc des buffers aussi)
@@ -36,6 +39,8 @@ typedef struct entete {
 	} t_entete;
 
 
+// declaration de l'entete
+t_entete ent;
 
 
 // ouvrir un fichier en mode 'N' ou 'A'
@@ -50,6 +55,14 @@ void lireDir( FILE *f, long i, tbloc *buf );
 
 // ecriture du contenu de la variable buf dans le bloc de données num i
 void ecrireDir( FILE *f, long i, tbloc *buf );
+
+
+void charg();		// Chargement initial du fichier
+void info();		// Affichage de l'entête
+void parcours();  	// Affichage d'une séquence de blocs contigus (entre a et b)
+void orga_selon_pivot(); // organise le fichier selon un pivot donner au debut les valeurs inf pui à la fin les valeurs inf
+
+
 
 
 #endif
