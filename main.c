@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <conio.h>
 
 FILE *f = NULL;
 t_entete ent;
@@ -56,11 +56,8 @@ int main()
       	printf("\n--------- M E N U ---------\n");
 	printf("1) Afficher l'entete du fichier\n");
 	printf("2) Rechercher un enregistrement dans le fichier\n");
-	printf("3) Inserer un enregistrement dans le fichier\n");
-	printf("4) Supprimer un enregistrement dans le fichier\n");
-	printf("5) Affichage de bloc(s)\n");
-	printf("6) Réorganisation du fichier\n");
-	printf("7) organiser selon pivot qui est %d \n", pivot);
+	printf("3) Affichage de bloc(s)\n");
+	printf("4) organiser selon pivot qui est %d \n", pivot);
 	printf("0) Quitter le programme\n");
 
 	printf("\tchoix : ");
@@ -70,11 +67,8 @@ int main()
 	switch(choix) {
 	   case 1: info(); break;
 	   case 2: rech(); break;
-	   case 3: ins(); break;
-	   case 4: sup(); break;
-	   case 5: parcours(); break;
-	   case 6: reorg(); break;
-	   case 7:  orga_selon_pivot();break;
+	   case 3: parcours(); break;
+	   case 4: orga_selon_pivot();break;
 	}
    } while ( choix != 0);
    // Fermeture du fichier (sauvegarde de l'entete) ...
@@ -131,80 +125,6 @@ void charg()
 } // charg
 
 
-// réoragnisation du fichier ...
-// c-a-d chargement initial d'un nouveau fichier à partir des enreg de l'ancien fichier
-void reorg()
-{
-   double u;
-   long i, i2;
-   int j, j2;
-
-   // déclaration du nouveau fichier à construire
-   char nom2[20];	// nom du nouveau fichier
-   tbloc buf2;		// buffer utilisé pour sa construction
-   t_entete ent2;	// entete
-   FILE *f2;		// variable fichier C
-
-   printf("réorganisation du fichier\n");
-   printf("Donnez le nom du nouveau fichier à construire : ");
-   scanf(" %s", nom2);
-
-   ouvrir( &f2, nom2, 'N', &ent2 );
-
-   printf("Donnez le taux de chargement souhaité dans le nouveau fichier (entre 0 et 1) : ");
-   scanf(" %lf", &u);
-   if ( u < 1/MAXTAB ) u = 1/MAXTAB;
-   if ( u > 1 ) u = 1.0;
-
-   printf("Remplissage des blocs avec %d enreg (sauf éventuellement le dernier)\n",\
-	   (int)(MAXTAB*u));
-
-   // parcours séquentiel de l'ancien fichier (f) pour charger le nouveau fichier (f2)
-   // avec les enregistrements de f non effacés logiquement
-
-   j2 = 0;
-   i = i2 = 1;
-   while ( i <= ent.nb_bloc ) {
-	lireDir( f, i, &buf );
-	for (j=0; j<buf.nb; j++)
-	   if ( buf.eff[j] == ' ' ) {
-		// si l'enreg n'est pas effacé, on l'insère dans buf2
-		buf2.tab[j2] = buf.tab[j];
-		buf2.eff[j2] = ' ';
-		j2 = j2 + 1;
-		if ( j2 > MAXTAB*u ) {
-		   // si buf2 est plein à plus de u%, on le vide sur disque
-		   buf2.nb = j2;
-	   	   ecrireDir(f2, i2, &buf2);
-	   	   i2 = i2 + 1;
-	   	   j2 = 0;
-		}
-	   }
-	i++;
-   }
-
-   // dernière écriture (si buf2 n'est pas vide) ...
-   if ( j2 > 0 ) {
-	buf2.nb = j2;
- 	ecrireDir( f2, i2, &buf2 );
-   }
-
-   // m-a-j de l'entete de f2 ...
-   if ( j2 > 0 )
-	ent2.nb_bloc = i2;
-   else
-	ent2.nb_bloc = i2 - 1;
-   ent2.nb_ins = ent.nb_ins - ent.nb_sup;
-   ent2.nb_sup = 0;
-
-   // réouverture du nouveau fichier avec les varaibles globales du prog: f, buf et ent
-   fermer( f2, &ent2 );
-   fermer( f , &ent );
-   ouvrir( &f, nom2, 'A', &ent );
-
-} // reorg
-
-
 // afficher l'entete du fichier ...
 void info()
 {
@@ -224,14 +144,9 @@ void rech()
    long i, val, cpt;
    int trouv, j, choix;
 
-   printf("Recherche 1-dichotomique ou 2-séquentielle ? (1 ou 2) : ");
-   scanf(" %d", &choix);
    printf("Donnez la valeur cherchée : ");
    scanf(" %ld", &val);
 
-   if ( choix == 1 )
-	cpt = dicho( val, &trouv, &i, &j );
-   else
 	cpt = seq( val, &trouv, &i, &j );
 
    printf("Résultats de la recherche:\n");
@@ -242,53 +157,6 @@ void rech()
    printf("Nombre de lectures physiques effectuées = %ld\n", cpt);
 
 } // rech
-
-
-// recherche dichotomique
-// résultats: trouv (booléen), i (num de bloc), j (position dans le bloc)
-// retourne aussi le nombre de lecture de blocs effectués.
-long dicho( long val, int *trouv, long *i, int *j )
-{
-   long bi, bs, cpt;
-   int stop, inf, sup;
-
-   bi = 1;
-   bs = ent.nb_bloc;
-   *trouv = 0;
-   stop = 0;
-   cpt = 0; // compteur de lectures physiques
-   while ( bi <= bs && !*trouv && !stop ) {
-	*i = (bi + bs) / 2;		// le milieu entre bi et bs
-	lireDir( f, *i, &buf ); cpt++; 	// lecture du bloc du milieu
-	if ( val < buf.tab[0] )
-	   bs = *i - 1;		// la recherche contiue dans la 1ere moitié
-	else
-	   if ( val > buf.tab[ buf.nb-1 ] )
-	      	bi = *i + 1;	// la recherche contiue dans la 2eme moitié
-	   else {
-		stop = 1;	// recherche interne dans buf (bloc du milieu)
-	      	inf = 0;
-		sup = buf.nb-1;
-		while ( inf <= sup && !*trouv ) {
-		   *j = (inf + sup) / 2;
-		   if ( val == buf.tab[*j] ) *trouv = 1;
-		   else
-			if ( val < buf.tab[*j] )
-			   sup = *j - 1;
-			else
-			   inf = *j + 1;
-	   	} // while interne
-		if ( inf > sup ) *j = inf;
-	   }
-   } // while externe
-   if ( bi > bs ) {
-	*i = bi;
-	*j = 0;
-   }
-
-   return cpt;
-
-} // dicho
 
 
 // recherche sequentielle
@@ -324,131 +192,102 @@ long seq( long val, int *trouv, long *i, int *j )
 
 
 // Insertion par décalages en réutilisant les emplacements des enreg effacés logiquement
-void ins()
-{
-   long i, val, sauv, cptR, cptI;
-   int trouv, continu, empl_recup, j;
-
-   printf("Insertion d'un enregistrement\n");
-   printf("Donnez la valeur à insérer : ");
-   scanf(" %ld", &val);
-
-   // recherche de la position (i,j) où insérer l'enregistrement
-   cptR = dicho( val, &trouv, &i, &j );
-
-   printf("La recherche a coûté %ld lectures physiques.\n", cptR);
-   if (trouv && buf.eff[j] == ' ') {
-      // si l'enreg existe et n'est pas effacée logiquement, on arrete l'insertion.
-      printf("Insertion refusée car la valeur existe déjà dans le bloc %ld à la position %d\n"\
-	      , i, j);
-      return;
-   }
-
-   printf("La valeur doit être insérer dans le bloc %ld à la position %d", i, j);
-   printf(" ... "); fflush(stdout);
-
-   cptI = 0;	// compteur de lecture/ecriture dans la phase de décalages
-
-   empl_recup = 0; // indicateur de réutilisation d'un emplacement effacé logiquement
-		   // lors de l'insertion de la nouvelle valeur
-
-   if ( i > ent.nb_bloc ) {
-      // cas particulier d'une insertion en fin de fichier ...
-      buf.tab[0] = val;
-      buf.eff[0] = ' ';
-      buf.nb = 1;
-      ecrireDir( f, i, &buf ); cptI++;
-      ent.nb_bloc++;
-   }
-   else {
-      // cas général ...
-      continu = 1;
-      while ( continu ) {	// boucle principale pour les decalages inter-blocs
-	while ( continu && j < buf.nb ) {	// décalages intra-bloc ...
-	   sauv = buf.tab[j];
-	   buf.tab[j] = val;
-	   if ( buf.eff[j] == '*' ) {
-		continu = 0;
-		buf.eff[j] = ' ';
-	   }
-	   else {
-	   	j++;
-		val = sauv;
-	   }
-	}
-
-	if ( j == buf.nb ) 	// ou continu == 1
-	   if ( buf.nb < MAXTAB ) {
-		buf.nb++;
-		buf.tab[j] = val;  buf.eff[j] = ' ';
-		ecrireDir( f, i, &buf ); cptI++;
-		continu = 0;
-	   }
-	   else {
-		ecrireDir( f, i, &buf ); cptI++;
-		i++;  j = 0;
-		if ( i <= ent.nb_bloc ) {
-		   lireDir( f, i, &buf ); cptI++;
-		}
-		else {
-      	      	   // on a dépassé la fin de fichier, donc on rajoute un nouveau bloc ...
-      	      	   buf.tab[0] = val;
-      	      	   buf.eff[0] = ' ';
-      	      	   buf.nb = 1;
-      	      	   ecrireDir( f, i, &buf ); cptI++;
-     	      	   ent.nb_bloc++;
-	      	   continu = 0; // et on s'arrête
-		}
-	   }
-	else {
-	   // cas où les décalages se sont arrêtés sur un enreg effacé logiquement
-	   empl_recup = 1;
-	   ent.nb_sup--;	// car on réutilisé l'emplacement effacé logiquement
-	   ecrireDir( f, i, &buf ); cptI++;
-	}
-
-      } // fin de la boucle while principale
-
-   } // else (cas général)
-
-   if ( !empl_recup )		// si on n'a pas reutilisé un emplacement effacé logiq
-      ent.nb_ins++; 		// alors on incrémente le nombre d'insertions
-
-   printf("\nInsertion terminée. \n");
-   printf("\tCoût en opérations de lecture/écriture (rech:%ld + decl:%ld) = %ld\n", \
-		cptR, cptI, cptR+cptI);
-
-} // ins
-
-
-// Suppression logique d'un enregistrement
-void sup()
-{
-   long i, val, cptR;
-   int trouv, continu, j;
-
-   printf("Suppression (logique) d'un enregistrement\n");
-   printf("Donnez la valeur à suprimer : ");
-   scanf(" %ld", &val);
-
-   cptR = dicho( val, &trouv, &i, &j );
-
-   printf("La recherche a coûté %ld lectures physiques.\n", cptR);
-   if (!trouv || buf.eff[j] == '*') {
-      printf("Suppression refusée car la valeur ,n'existe pas\n");
-      return;
-   }
-
-   printf("La valeur à supprimer est dans le bloc %ld à la position %d\n", i, j);
-
-   buf.eff[j] = '*';		// effacement logique de l'enregistrement
-   ecrireDir( f, i, &buf );
-
-   ent.nb_sup++;
-
-   printf("Coût total (rech + sup) = %ld + 1 = %ld op. d'E/S\n", cptR, cptR+1 );
-
-} // sup
+//void ins()
+//{
+//   long i, val, sauv, cptR, cptI;
+//   int trouv, continu, empl_recup, j;
+//
+//   printf("Insertion d'un enregistrement\n");
+//   printf("Donnez la valeur à insérer : ");
+//   scanf(" %ld", &val);
+//
+//   // recherche de la position (i,j) où insérer l'enregistrement
+//   cptR = seq( val, &trouv, &i, &j );
+//
+//   printf("La recherche a coûté %ld lectures physiques.\n", cptR);
+//   if (trouv && buf.eff[j] == ' ') {
+//      // si l'enreg existe et n'est pas effacée logiquement, on arrete l'insertion.
+//      printf("Insertion refusée car la valeur existe déjà dans le bloc %ld à la position %d\n"\
+//	      , i, j);
+//      return;
+//   }
+//
+//   printf("La valeur doit être insérer dans le bloc %ld à la position %d", i, j);
+//   printf(" ... "); fflush(stdout);
+//
+//   cptI = 0;	// compteur de lecture/ecriture dans la phase de décalages
+//
+//   empl_recup = 0; // indicateur de réutilisation d'un emplacement effacé logiquement
+//		   // lors de l'insertion de la nouvelle valeur
+//
+//   if ( i > ent.nb_bloc ) {
+//      // cas particulier d'une insertion en fin de fichier ...
+//      buf.tab[0] = val;
+//      buf.eff[0] = ' ';
+//      buf.nb = 1;
+//      ecrireDir( f, i, &buf ); cptI++;
+//      ent.nb_bloc++;
+//   }
+//   else {
+//      // cas général ...
+//      continu = 1;
+//      while ( continu ) {	// boucle principale pour les decalages inter-blocs
+//	while ( continu && j < buf.nb ) {	// décalages intra-bloc ...
+//	   sauv = buf.tab[j];
+//	   buf.tab[j] = val;
+//	   if ( buf.eff[j] == '*' ) {
+//		continu = 0;
+//		buf.eff[j] = ' ';
+//	   }
+//	   else {
+//	   	j++;
+//		val = sauv;
+//	   }
+//	}
+//
+//	if ( j == buf.nb ) 	// ou continu == 1
+//	   if ( buf.nb < MAXTAB ) {
+//		buf.nb++;
+//		buf.tab[j] = val;  buf.eff[j] = ' ';
+//		ecrireDir( f, i, &buf ); cptI++;
+//		continu = 0;
+//	   }
+//	   else {
+//		ecrireDir( f, i, &buf ); cptI++;
+//		i++;  j = 0;
+//		if ( i <= ent.nb_bloc ) {
+//		   lireDir( f, i, &buf ); cptI++;
+//		}
+//		else {
+//      	      	   // on a dépassé la fin de fichier, donc on rajoute un nouveau bloc ...
+//      	      	   buf.tab[0] = val;
+//      	      	   buf.eff[0] = ' ';
+//      	      	   buf.nb = 1;
+//      	      	   ecrireDir( f, i, &buf ); cptI++;
+//     	      	   ent.nb_bloc++;
+//	      	   continu = 0; // et on s'arrête
+//		}
+//	   }
+//	else {
+//	   // cas où les décalages se sont arrêtés sur un enreg effacé logiquement
+//	   empl_recup = 1;
+//	   ent.nb_sup--;	// car on réutilisé l'emplacement effacé logiquement
+//	   ecrireDir( f, i, &buf ); cptI++;
+//	}
+//
+//      } // fin de la boucle while principale
+//
+//   } // else (cas général)
+//
+//   if ( !empl_recup )		// si on n'a pas reutilisé un emplacement effacé logiq
+//      ent.nb_ins++; 		// alors on incrémente le nombre d'insertions
+//
+//   printf("\nInsertion terminée. \n");
+//   printf("\tCoût en opérations de lecture/écriture (rech:%ld + decl:%ld) = %ld\n", \
+//		cptR, cptI, cptR+cptI);
+//
+//} // ins
+//
 
 
 // Affichage d'une séquence de blocs contigus (entre a et b)
@@ -472,8 +311,6 @@ void parcours()
 	 else
 	    printf("*%ld* ", buf.tab[j]);
       printf("\n--------------------------------------------------\n");
-
-
 
    }
 
@@ -546,8 +383,12 @@ void organiseA(tbloc *buft)
 
 
 void orga_selon_pivot()
+    /** cette procedure fait la reorganisation des bloc */
+
 {
     // declarations
+    printf("Donner votre pivot :");
+    scanf("%d", &pivot);
     long a = 1; // ceci fera la borne inf bloc inferieur
     long b = ent.nb_bloc;// ceci fera la borne sup bloc inferieur
     int stop = 0;
@@ -598,18 +439,6 @@ void orga_selon_pivot()
         }
 
     }
-
-
-
-
-        // pour tester organiser pour un seul bloc
-//        for( int j=0; j<bufa.nb; j++)
-//            {
-//                if ( bufa.eff[j] == ' ' )
-//                printf("%ld ", bufa.tab[j]);
-//                else
-//                printf("*%ld* ", bufa.tab[j]);
-//            }
 
 }
 
