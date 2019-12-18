@@ -71,8 +71,7 @@ void charg()
    printf("Chargment initial du fichier\n");
    printf("Donnez le nombre d'enregistrement %c ins%crer : ",133 , 130);
    scanf(" %ld", &n);
-   printf("Donnez le taux de chargement souhait%c (entre 0 et 1) : ", 130);
-   scanf(" %lf", &u);
+   u = 1;
    if ( u < 1/MAXTAB ) u = 1/MAXTAB; // pour avoir au moins un enregistrement par bloc
    if ( u > 1 ) u = 1.0;	     // maximum = 100%
 
@@ -125,14 +124,14 @@ void parcours()
 
    printf("Affichage d'une s%cquence de bloc(s). ayant des adresses dans [a , b] \n", 130);
    printf("le fichier commence dans le bloc num 1 et se termine dans le bloc num %ld\n", ent.nb_bloc);
-   printf("donnez a : ");
-   textcolor(GREEN);scanf(" %ld", &a);textcolor(WHITE);
-   printf("donnez b : ");
-   textcolor(GREEN);scanf(" %ld", &b);textcolor(WHITE);
+//   printf("donnez a : ");
+//   textcolor(GREEN);scanf(" %ld", &a);textcolor(WHITE);
+//   printf("donnez b : ");
+//   textcolor(GREEN);scanf(" %ld", &b);textcolor(WHITE);
 
 
     printf("\n");
-   for (i = a; i <= b; i++) {
+   for (i = 1; i <= ent.nb_bloc; i++) {
       lireDir(f, i, &buf);
       printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
       for( j=0; j<buf.nb; j++)
@@ -253,6 +252,7 @@ void orga_selon_pivot()
 
         }
             ecrireDir(f, a, &bufa);
+            ecrireDir(f, b, &bufb);
         if (bloc_inf(bufa))
         {
             ecrireDir(f, a, &bufa);
@@ -275,6 +275,8 @@ void orga_selon_pivot()
     textcolor(GREEN);
     printf("Le fichier a %ct%c r%corganis%c selon le pivot %d avec succ%cs.", 130, 130, 130, 130, pivot, 138);
     textcolor(WHITE);
+    affichage_selon_pivot();
+
 }
 
 
@@ -287,9 +289,11 @@ void debut()
 
    char nom[20], mode[20];
    textcolor(GREEN);
-   printf("\n***************************************************\n");
-   printf("Op%crations d'acc%cs sur un Fichier de type T/oF\n", 130, 138);
-   printf("Capacit%c maximale des blocs = %d enregistrements\t\n\n",130,  MAXTAB);
+
+   printf("\n\t\t***************************************************");
+   printf("\n\t\t********************* EXO7 ************************\n");
+   printf("\t\tOp%crations d'acc%cs sur un Fichier de type T/oF\n", 130, 138);
+   printf("\t\tCapacit%c maximale des blocs = %d enregistrements\t\n\n",130,  MAXTAB);
     textcolor(WHITE);
    printf("Taille d'un bloc = %ld \tTaille entete = %ld\n\n", sizeof(tbloc), sizeof(t_entete) );
 
@@ -310,6 +314,35 @@ void debut()
 void fin() // ferme le fichier
 {
     fermer(f, &ent);
+}
+
+void affichage_selon_pivot()
+/** affichage selon un pivot
+    les nombres inférieurs au pivot en vert et les nombres en
+
+ */
+
+{
+    int j;
+    printf("\n");
+    textcolor(LIGHTCYAN);
+    printf("AFFICHAGE SELON PIVOT %d\n\n\n", pivot);
+    textcolor(WHITE);
+   for (int i = 1; i <= ent.nb_bloc; i++) {
+      lireDir(f, i, &buf);
+      printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
+      for(j=0; j<buf.nb; j++)
+        {
+        if (buf.tab[j] <= pivot)
+            textcolor(GREEN);
+        else textcolor(RED);
+
+	    printf("%ld ", buf.tab[j]);
+        }
+      textcolor(WHITE);
+     printf("\n-------------------\n");
+   }
+   printf("\n");
 }
 
 

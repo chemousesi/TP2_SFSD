@@ -10,6 +10,7 @@ int main()
 {
     int choix , i;
    // Ouverture du fichier ...
+   pivot = 15;
     debut();
    // Menu principal ...
    do {
@@ -18,7 +19,7 @@ int main()
 
 	 textcolor(BLUE);printf("  1)");textcolor(WHITE); printf("Afficher l'entete du fichier\n");
 	 textcolor(BLUE);printf("  2)");textcolor(WHITE);printf("Affichage de bloc(s)\n");
-	 textcolor(BLUE);printf("  3)");textcolor(WHITE);printf("Organiser selon un pivot\n");
+	 textcolor(BLUE);printf("  3)");textcolor(WHITE);printf("Organiser selon un pivot ( %d )\n", pivot);
 	 textcolor(BLUE);printf("  0)");textcolor(WHITE); printf("Quitter le programme\n");
 
 	printf("\tchoix : ");
