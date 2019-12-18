@@ -13,8 +13,6 @@ FILE *f = NULL;
 tbloc buf, bufa, bufb;
 t_entete ent;
 
-
-
 // ouvre un fichier et m-a-j de l'entête ent
 void ouvrir( FILE **f, char *nom, char mode, t_entete *ent )
 {
@@ -62,6 +60,7 @@ void ecrireDir( FILE *f, long i, tbloc *buf )
 
 // Chargement initial à u% ...
 void charg()
+
 {
    double u;
    long i, k, n;
@@ -104,6 +103,7 @@ void charg()
 } // charg
 
 
+
 // afficher l'entete du fichier ...
 void info()
 {
@@ -116,6 +116,8 @@ void info()
 } // info
 
 // Affichage d'une séquence de blocs contigus (entre a et b)
+
+
 
 void parcours()
 {
@@ -133,7 +135,7 @@ void parcours()
     printf("\n");
    for (i = 1; i <= ent.nb_bloc; i++) {
       lireDir(f, i, &buf);
-      printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
+      printf("[Bloc Num:%3ld \t ");
       for( j=0; j<buf.nb; j++)
 	 if ( buf.eff[j] == ' ' )
 	    printf("%ld ", buf.tab[j]);
@@ -228,11 +230,16 @@ void orga_selon_pivot()
 
 
     while (!stop)
+        /**
+        cette boucle s'arrete lorsque les buf a et b poinne
+
+        */
+
     {
         lireDir(f, a, &bufa);
-        organiseA(&bufa);
+        organiseA(&bufa);// organiser le bloc pris par le buffer a pour avoir les valuers inférieures au pivot au debut du buf
         lireDir(f, b, &bufb);
-        organiseA(&bufb);
+        organiseA(&bufb);// organiser le bloc pris par le buffer a pour avoir les valuers inférieures au pivot au debut du buf
 
         while(!(bloc_inf(bufa)) && !(bloc_sup(bufb)))
             /** dans cette boucle on teste
@@ -242,40 +249,45 @@ void orga_selon_pivot()
         {
             int i = 0;
             while (bufa.tab[i] <= pivot)
+                /**avoir l'indice du dernier nombre inferieur
+                ou egal au pivot  */
             {
                 i++;
             }
-            tempo = bufa.tab[i];
+
+            tempo = bufa.tab[i];// faire la permutation
             bufa.tab[i] = bufb.tab[0];
             bufb.tab[0] = tempo;
             organiseA(&bufb);
 
         }
-            ecrireDir(f, a, &bufa);
+            ecrireDir(f, a, &bufa);//ecrire pour ne pas perdre les valuers du buffer
             ecrireDir(f, b, &bufb);
-        if (bloc_inf(bufa))
+
+        if (bloc_inf(bufa)) // si tout le bloc est inferieur au pivot en avance au pivot suivant
         {
             ecrireDir(f, a, &bufa);
             a++;
-        }else if (bloc_sup(bufb))
+        }else if (bloc_sup(bufb)) // si tout le bloc est supérieur au pivot en recule vers le bloc précédent
             {
             ecrireDir(f, b, &bufb);
             b--;
             }
 
-        if (a==b)
+        if (a==b) // si les buffuers pointent vers le meme bloc on l'ecrit apres son organisation
         {
             lireDir(f, a, &bufa);
             organiseA(&bufa);
             ecrireDir(f, a, &bufa);
             stop = 1;
         }
-
+        // cela fera la fin de cette boucle
     }
+
     textcolor(GREEN);
     printf("Le fichier a %ct%c r%corganis%c selon le pivot %d avec succ%cs.", 130, 130, 130, 130, pivot, 138);
     textcolor(WHITE);
-    affichage_selon_pivot();
+    affichage_selon_pivot(); // affichage personalisé selon le pivot
 
 }
 
@@ -297,6 +309,7 @@ void debut()
     textcolor(WHITE);
    printf("Taille d'un bloc = %ld \tTaille entete = %ld\n\n", sizeof(tbloc), sizeof(t_entete) );
 
+
     printf("\nDonnez le nom du fichier : ");
    scanf(" %s", nom);
    printf("Ancien ou Nouveau ? (a/n) : ");
@@ -310,11 +323,6 @@ void debut()
 
 }
 
-
-void fin() // ferme le fichier
-{
-    fermer(f, &ent);
-}
 
 void affichage_selon_pivot()
 /** affichage selon un pivot
@@ -330,7 +338,7 @@ void affichage_selon_pivot()
     textcolor(WHITE);
    for (int i = 1; i <= ent.nb_bloc; i++) {
       lireDir(f, i, &buf);
-      printf("[Bloc Num:%3ld \t "); //NB = %2d \tCapacité max = %2d]\n", i, buf.nb, MAXTAB);
+      printf("[Bloc Num:%3ld \t ");
       for(j=0; j<buf.nb; j++)
         {
         if (buf.tab[j] <= pivot)
@@ -346,3 +354,7 @@ void affichage_selon_pivot()
 }
 
 
+void fin() // ferme le fichier
+{
+    fermer(f, &ent);
+}
