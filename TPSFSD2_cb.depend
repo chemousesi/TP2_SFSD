@@ -7,7 +7,7 @@
 1576662672 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.h
 	<stdio.h>
 
-1576664793 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
+1576664814 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\modele.c
 	<stdio.h>
 	<time.h>
 	"conio.h"
@@ -26,4 +26,28 @@
 
 1573166798 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb\conio.h
 	<stdio.h>
+
+1576667466 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb_exo7\main.c
+	"modele.h"
+	<stdlib.h>
+	"conio.c"
+
+1576685613 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb_exo7\modele.h
+	<stdio.h>
+
+1573166798 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb_exo7\conio.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<windows.h>
+	<string.h>
+	"conio.h"
+
+1573166798 c:\users\expertpc\desktop\cprojects\tpsfsd2_cb_exo7\conio.h
+	<stdio.h>
+
+1576699600 source:c:\users\expertpc\desktop\cprojects\tpsfsd2_cb_exo7\modele.c
+	<stdio.h>
+	"conio.h"
+	"modele.h"
 

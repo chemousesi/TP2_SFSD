@@ -2,16 +2,19 @@
  * Implémentation du modèle simplfié de fichier TOF / SFSD 2019 / chemsou&oussama *
  **************************************************************************/
 #include <stdio.h>
-#include <time.h>
+
 #include "conio.h"
 #include "modele.h"
 
 
 /** declaration du fichier*/
 FILE *f = NULL;
-
 tbloc buf, bufa, bufb;
 t_entete ent;
+
+
+
+
 
 // ouvre un fichier et m-a-j de l'entête ent
 void ouvrir( FILE **f, char *nom, char mode, t_entete *ent )
@@ -225,11 +228,10 @@ void orga_selon_pivot()
     textcolor(WHITE);
     long a = 1; // ceci fera la borne inf bloc inferieur
     long b = ent.nb_bloc;// ceci fera la borne sup bloc inferieur
-    int stop = 0;
     int tempo;
 
 
-    while (!stop)
+    while (a<b)
         /**
         cette boucle s'arrete lorsque les buf a et b poinne
 
@@ -274,15 +276,14 @@ void orga_selon_pivot()
             b--;
             }
 
-        if (a==b) // si les buffuers pointent vers le meme bloc on l'ecrit apres son organisation
-        {
-            lireDir(f, a, &bufa);
-            organiseA(&bufa);
-            ecrireDir(f, a, &bufa);
-            stop = 1;
-        }
+
+
+
         // cela fera la fin de cette boucle
     }
+     lireDir(f, a, &bufa);
+     organiseA(&bufa);
+     ecrireDir(f, a, &bufa);
 
     textcolor(GREEN);
     printf("Le fichier a %ct%c r%corganis%c selon le pivot %d avec succ%cs.", 130, 130, 130, 130, pivot, 138);
@@ -292,7 +293,7 @@ void orga_selon_pivot()
 }
 
 
-void debut()
+void debut_exo7()
 
 /** prépare le debut du programme nom est ouvre le fichier
            crée le fichier quand il est nouveau */

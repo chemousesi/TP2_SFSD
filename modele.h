@@ -5,10 +5,8 @@
  ************************************************************************/
 
 
-
-
-
 #include <stdio.h>
+
 #ifndef MODELE_H
 #define MODELE_H
 
@@ -62,7 +60,7 @@ void charg();		// Chargement initial du fichier
 void info();		// Affichage de l'entête
 void parcours();  	// Affichage d'une séquence de blocs contigus (entre a et b)
 void orga_selon_pivot(); // organise le fichier selon un pivot donner au debut les valeurs inf pui à la fin les valeurs inf
-void debut();// debut du programme
+void debut_exo7();// debut du programme
 void fin();
 void affichage_selon_pivot();
 #endif

@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "modele.h"
+
 #include <stdlib.h>
 #include "conio.c"
 
@@ -11,7 +12,7 @@ int main()
     int choix , i;
    // Ouverture du fichier ...
    pivot = 15;
-    debut();
+    debut_exo7();
    // Menu principal ...
    do {
         textcolor(CYAN);
